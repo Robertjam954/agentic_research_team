@@ -2,6 +2,19 @@
 
 A multi-agent research pipeline for biomedical and clinical research, built on the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) and Deep Research API.
 
+## Description
+
+This project provides an automated research assistant tailored for biomedical and clinical domains. It orchestrates four specialised AI agents that collaboratively handle the full lifecycle of a research query — from disambiguation and scoping, through structured instruction-building, to web-scale evidence synthesis.
+
+**Key capabilities:**
+
+- **Intelligent triage** — automatically determines whether a query is specific enough to proceed, or routes it to clarification first.
+- **PICO-guided clarification** — structures ambiguous queries using the Population, Intervention, Comparator, Outcome framework widely used in evidence-based medicine.
+- **Structured research briefs** — converts enriched queries into precise instructions that improve the quality and reproducibility of the generated research.
+- **Deep Research synthesis** — leverages OpenAI's `o3-deep-research` / `o4-mini-deep-research` models to search and synthesise web-scale biomedical literature, with streamed intermediate steps and citation extraction.
+
+**Ideal use cases:** systematic literature reviews, clinical evidence summaries, drug/target mechanism analysis, and comparative effectiveness research.
+
 ## Architecture
 
 Four specialized agents work in sequence:
