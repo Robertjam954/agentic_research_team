@@ -1,0 +1,28 @@
+# Secrets
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Data + GraphRAG artifacts
+data/raw/
+data/processed/
+data/graphrag/input/
+data/graphrag/output/
+data/graphrag/cache/
+data/graphrag/lancedb/
+data/graphrag/.env
+
+# Reports
+reports/community_summaries/
+
+# Logs
+*.log
