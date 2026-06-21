@@ -25,6 +25,23 @@ multi-agent research team.
 `AGENTS.md` is the canonical spec for the agent team. This file owns
 infrastructure, data, evals, and ops.
 
+**Direction:** orchestration standardizes on **LangGraph + deepagents**, reusing
+the existing research pipeline as a `research_pipeline` tool (not a rewrite), and
+deploys to Azure. The team grows to cover content writing, notes -> Obsidian, and
+self-documentation. See the docs below.
+
+### Docs
+
+| Doc | Purpose |
+|---|---|
+| [`PRODUCT.md`](PRODUCT.md) | Vision, capabilities (v1 vs roadmap), scope, success criteria |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Target architecture + framework-reconciliation decision |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Setup, conventions, ADR requirement, PR checklist |
+| [`AGENTS.md`](AGENTS.md) | Canonical agent-team spec (roster, control loop, tools) |
+| [`docs/plans/merge-content-and-deploy-plan.md`](docs/plans/merge-content-and-deploy-plan.md) | Master implementation backlog |
+| [`docs/adr/`](docs/adr/) | Architecture Decision Records (template + 0001/0002) |
+| [`docs/gaps.md`](docs/gaps.md) | What's missing, mapped to each capability |
+
 ---
 
 ## 2. Repository Layout

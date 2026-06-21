@@ -176,6 +176,47 @@ written to Cosmos (see CLAUDE.md data tier) for audit and eval replay.
   any generated artifacts (paths in Blob).
 - **Prompt:** `prompts/coder.system.md`.
 
+### Content Writer (target)
+- **The point:** turns a finished summary/report into publishable content (blog
+  posts, LinkedIn) using deepagents **skills** (`skills/<format>/SKILL.md`).
+  Reuses the patterns in `interrupt-resume-deep-agents` (`create_deep_agent`,
+  `skills=[...]`).
+- **HITL:** drafts are written behind `interrupt_on={"write_file": True}`; a human
+  approves/edits via `Command(resume=...)` before anything is finalized.
+- **Output:** markdown drafts under the run's workspace; never auto-publishes.
+- **Prompt / skills:** `prompts/content_writer.system.md`,
+  `src/agents/skills/{blog-post,linkedin-post}/SKILL.md`.
+
+### Evaluator (target)
+- **The point:** judges the team's output - summary quality, **RAG citation
+  faithfulness** (does each claim trace to retrieved evidence), and safety - and
+  drives the deep-eval harness in `eval/`.
+- **Backed by:** Foundry `azure-ai-evaluation` builtins (quality, safety,
+  task-adherence) plus a citation-faithfulness check over retrieved chunks.
+- **Prompt:** `prompts/evaluator.system.md`. See `CLAUDE.md` "Evaluation".
+
+### Notes / Ingestion (target)
+- **The point:** the IngestionAgent expanded. Besides growing the KB from
+  Microsoft Learn (MCP) and PubMed/Scopus, it captures personal sources -
+  **Apple Notes, blog posts, and YouTube** - and writes them into an **Obsidian
+  vault** as a linked graph (frontmatter, `[[wikilinks]]`, backlinks), following
+  the conventions lifted from `local_agentic_content_extraction_blog_writer`.
+- **Tools:** `fetch_ms_learn`, `fetch_pubmed`, `fetch_blog`, `fetch_youtube`,
+  `kb_upsert`, `obsidian_write`.
+- **Note:** Apple Notes export, blog scraping, and the Obsidian writer are
+  net-new (see `docs/gaps.md`); YouTube chunking is liftable from
+  `zen-ai-engineer-tutor`.
+- **Prompt:** `prompts/ingestion.system.md`.
+
+### Self-Documenting (target, middleware)
+- **The point:** keeps the codebase explainable. On an architectural change it
+  runs `git diff main`, evaluates the delta against `docs/adr/0000-template.md`,
+  and writes a new ADR capturing the **why** (see ADR 0001/0002 for the format).
+- **Caching:** wraps LLM and retrieval calls in a Redis **semantic cache**
+  (embedding-similarity hit -> stored response), per
+  [ADR 0002](docs/adr/0002-redis-semantic-caching.md).
+- **Tools:** `generate_adr`, `cache_get`/`cache_set`.
+
 ---
 
 ## 4. Tool registry
@@ -185,14 +226,20 @@ table in section 1. Each tool is a typed LangGraph/LC `@tool`.
 
 | Tool | Signature (logical) | Backed by | Used by |
 |---|---|---|---|
-| `search_sr_corpus` | `(query, k=8, filters?) -> list[Chunk]` | **PostgreSQL pgvector** ANN (HNSW); query embedded via `azure_openai.create_embeddings` inside the DB | Knowledge, Research |
-| `graph_search` | `(query, method=global\|local\|drift, level=0..n) -> Summary` | **GraphRAG** community index (`src/graphrag`, `src/query/run_query.py`) | Knowledge, Research |
-| `web_search` | `(query) -> list[WebHit]` | Hosted web / Deep Research model | Knowledge |
-| `fetch_ms_learn` | `(topic\|url) -> Doc` | **Microsoft Learn MCP** server | Ingestion |
-| `fetch_pubmed` | `(query\|pmid) -> list[Record]` | PubMed E-utilities | Ingestion |
-| `kb_upsert` | `(docs) -> UpsertResult` | writes corpus `.txt` + pgvector rows + GraphRAG input | Ingestion |
+| `search_corpus_semantic` | `(query, k=8, filters?) -> list[Chunk]` | **PostgreSQL pgvector** ANN (HNSW); query embedded via `azure_openai.create_embeddings` inside the DB | Retriever, Research |
+| `search_corpus_graph` | `(query, method=global\|local\|drift, level=0..n) -> Summary` | **GraphRAG** community index (`src/graphrag`, `src/query/run_query.py`) | Retriever, Research |
+| `web_search` | `(query) -> list[WebHit]` | Web search (Bing grounding on Azure) | Retriever |
+| `research_pipeline` | `(query) -> Report` | Adapter over the existing OpenAI Agents SDK pipeline (`biomedical_agents.run_research`) | Retriever / Orchestrator |
+| `fetch_ms_learn` | `(topic\|url) -> Doc` | **Microsoft Learn MCP** server | Notes/Ingestion |
+| `fetch_pubmed` | `(query\|pmid) -> list[Record]` | PubMed E-utilities | Notes/Ingestion |
+| `fetch_blog` | `(url) -> Doc` | blog scraper (httpx + readability) **(target)** | Notes/Ingestion |
+| `fetch_youtube` | `(url\|id) -> Transcript` | `youtube-transcript-api` **(target)** | Notes/Ingestion |
+| `kb_upsert` | `(docs) -> UpsertResult` | writes corpus `.txt` + pgvector rows + GraphRAG input | Notes/Ingestion |
+| `obsidian_write` | `(note) -> Path` | Obsidian vault writer: frontmatter + `[[wikilinks]]` + backlinks **(target)** | Notes/Ingestion |
 | `run_code` | `(code) -> ExecResult` | sandboxed Python (code interpreter) | Coder |
-| `cite` | `(claims, evidence) -> list[Citation]` | citation normalizer | Summary |
+| `cite` | `(claims, evidence) -> list[Citation]` | citation normalizer | Summarizer |
+| `generate_adr` | `(diff) -> AdrPath` | `git diff` -> ADR markdown from `docs/adr/0000-template.md` **(target)** | Self-Documenting |
+| `cache_get` / `cache_set` | `(query) -> Hit?` / `(query, value)` | **Redis** semantic cache (embedding similarity) **(target)** | Self-Documenting |
 
 **Hosting (per decision):** capability agents run **in-process** (LangGraph
 nodes, plain Python tool modules) for now - no Azure Functions host. The tool

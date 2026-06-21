@@ -40,10 +40,11 @@ def query(
         "--root", str(root),
         "--method", method,
         "--response-type", response_type,
-        "--query", text,
     ]
     if method == "global" and community_level is not None:
         cmd += ["--community-level", str(community_level)]
+    # graphrag>=2 takes the query as a positional argument (was --query).
+    cmd.append(text)
 
     env = os.environ.copy()
     result = subprocess.run(cmd, capture_output=True, text=True, env=env)
