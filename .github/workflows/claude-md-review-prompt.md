@@ -1,6 +1,6 @@
-# Task: Verify CLAUDE.md and Generate the Weekly TODO
+# Task: Verify CLAUDE.md and README.md and Generate the Weekly TODO
 
-You are running the Monday documentation pass for this repository. It has two
+You are running the Monday documentation pass for this repository. It has three
 deliverables:
 
 1. **Verify CLAUDE.md.** CLAUDE.md is the operating manual that future Claude Code
@@ -8,7 +8,12 @@ deliverables:
    end of each working session; your job is to keep it honest. Compare every claim
    in the file against the actual code and fix only what has drifted. Where the
    existing CLAUDE.md and the code disagree, **always favor the code.**
-2. **Regenerate TODO.md.** A prioritized, dated task list at the repository root
+2. **Verify README.md.** The public-facing README follows a fixed structure
+   (front-matter, user story, architecture, run, supporting docs, disclaimers).
+   Verify it the same way as CLAUDE.md: accuracy of the YAML front-matter, key
+   features, ASCII architecture diagram, commands, and output paths. Fix only
+   drift; preserve the current-vs-(target) labeling discipline.
+3. **Regenerate TODO.md.** A prioritized, dated task list at the repository root
    that captures what needs doing next, derived from your analysis.
 
 ## About this project
@@ -44,10 +49,11 @@ Repo-specific instructions for this run:
   the phased backlog in `docs/plans/merge-content-and-deploy-plan.md`, plus any
   (target) items in CLAUDE.md; keep items traceable to those sources.
 - NEVER commit anything under `data/` - corpus exports and index artifacts are
-  gitignored local data. Only CLAUDE.md and TODO.md may be committed by this run.
+  gitignored local data. Only CLAUDE.md, README.md, and TODO.md may be committed
+  by this run.
 <!-- REPO_SPECIFIC_END -->
 
-## Part 1: CLAUDE.md verification
+## Part 1: CLAUDE.md and README.md verification
 
 ### Analysis requirements
 
@@ -68,14 +74,19 @@ Repo-specific instructions for this run:
    workflows; document what each does.
 7. **Conventions and gotchas** - extract coding conventions from the code; keep any
    documented gotchas that still apply and remove ones that no longer do.
+8. **README.md** - verify it the same way as CLAUDE.md: the YAML front-matter
+   (languages, products, urlFragment), the Key features list (module names and
+   the output artifacts they produce), the ASCII architecture diagram, every
+   command in the Run section, and the paths in the Outputs / Verifying-the-run
+   sections. Fix any drift; never promote a (target) item to current.
 
-### Output requirements for CLAUDE.md
+### Output requirements for CLAUDE.md and README.md
 
 - Maintain the current structure; update content in place for accuracy.
 - Add new sections only for significant undocumented findings.
 - Remove outdated information.
 - Be thorough but concise - every line should provide value.
-- If the file is already accurate, make NO edits to it.
+- If a file is already accurate, make NO edits to it.
 
 ## Part 2: TODO.md generation
 

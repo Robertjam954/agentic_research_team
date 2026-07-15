@@ -248,16 +248,17 @@ python -c "import asyncio; from src.agents.biomedical_agents import run_research
 This repository is self-documenting. Two mechanisms keep the docs honest:
 
 1. **End of every session:** before finishing any working session that changed
-   code, commands, dependencies, structure, or conventions, update CLAUDE.md (and
-   the affected prep docs: PRODUCT.md, ARCHITECTURE.md, CONTRIBUTING.md,
-   AGENTS.md) so they match reality - including the current-vs-**(target)**
-   labeling in sections 1-9. Reality wins over stale documentation. This applies
-   to human and agent sessions alike.
+   code, commands, dependencies, structure, or conventions, update CLAUDE.md and
+   README.md (and the affected prep docs: PRODUCT.md, ARCHITECTURE.md,
+   CONTRIBUTING.md, AGENTS.md) so they match reality - including the
+   current-vs-**(target)** labeling in sections 1-9. Reality wins over stale
+   documentation. This applies to human and agent sessions alike.
 2. **Every Monday:** the `.github/workflows/update-claude-md.yml` workflow runs an
    automated verification pass (09:00 UTC) driven by
    `.github/workflows/claude-md-review-prompt.md`. It re-analyzes the codebase,
-   corrects any drift in CLAUDE.md that session updates missed, regenerates the
-   prioritized `TODO.md` at the repo root (seeded from `docs/gaps.md` and
+   corrects any drift in CLAUDE.md and README.md that session updates missed,
+   regenerates the prioritized `TODO.md` at the repo root (seeded from
+   `docs/gaps.md` and
    `docs/plans/merge-content-and-deploy-plan.md`), and opens a PR for review. It
    requires the `CLAUDE_CODE_OAUTH_TOKEN` repository secret (generate with
    `claude setup-token`). The run never commits anything under `data/`.
