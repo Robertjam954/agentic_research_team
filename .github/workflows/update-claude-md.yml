@@ -99,22 +99,22 @@ jobs:
       - name: Check for changes
         id: check-changes
         run: |
-          if git diff --quiet HEAD -- CLAUDE.md README.md TODO.md && [ -z "$(git status --porcelain -- CLAUDE.md README.md TODO.md)" ]; then
-            echo "No changes detected in CLAUDE.md, README.md, or TODO.md"
+          if git diff --quiet HEAD -- CLAUDE.md README.md TODO.md requirements.txt && [ -z "$(git status --porcelain -- CLAUDE.md README.md TODO.md requirements.txt)" ]; then
+            echo "No changes detected in CLAUDE.md, README.md, TODO.md, or requirements.txt"
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
             echo "Changes detected"
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
             echo "::group::Docs changes"
-            git status --porcelain -- CLAUDE.md README.md TODO.md
-            git diff HEAD -- CLAUDE.md README.md TODO.md
+            git status --porcelain -- CLAUDE.md README.md TODO.md requirements.txt
+            git diff HEAD -- CLAUDE.md README.md TODO.md requirements.txt
             echo "::endgroup::"
           fi
 
       - name: Commit changes
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
-          git add CLAUDE.md README.md TODO.md
+          git add CLAUDE.md README.md TODO.md requirements.txt
           git commit -m "chore: weekly CLAUDE.md verification + TODO refresh
 
           Automated Monday pass: verified CLAUDE.md and README.md against the

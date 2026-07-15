@@ -41,6 +41,7 @@ and (target) items in CLAUDE.md.
 
 ## Done since last week
 
+- Verified requirements.txt against actual imports: added `numpy` (direct imports in `src/ingest/build_extracted_breast_msk_2018.py` and `src/ingest/deidentify_genomic_data.py`); wired requirements.txt into the weekly verification workflow (check/diff/add) and the review prompt.
 - Added `.github/workflows/update-claude-md.yml` (weekly CLAUDE.md verification + TODO regeneration) and its prompt file.
 - Added `.github/copilot-instructions.md` linking the prep-doc set.
 - Added CLAUDE.md s.11 "Self-documentation protocol" and documented `src/store/` in the repo layout.

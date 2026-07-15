@@ -49,8 +49,8 @@ Repo-specific instructions for this run:
   the phased backlog in `docs/plans/merge-content-and-deploy-plan.md`, plus any
   (target) items in CLAUDE.md; keep items traceable to those sources.
 - NEVER commit anything under `data/` - corpus exports and index artifacts are
-  gitignored local data. Only CLAUDE.md, README.md, and TODO.md may be committed
-  by this run.
+  gitignored local data. Only CLAUDE.md, README.md, TODO.md, and requirements.txt
+  may be committed by this run.
 <!-- REPO_SPECIFIC_END -->
 
 ## Part 1: CLAUDE.md and README.md verification
@@ -63,18 +63,25 @@ Repo-specific instructions for this run:
    manifests (pyproject.toml, requirements*.txt, package.json, lockfiles, config
    files). Remove technologies listed but not actually used; add ones used but
    undocumented.
-3. **Commands** - verify every documented command exists and is correct (scripts,
+3. **Dependency manifest** - verify the root `requirements.txt` against the actual
+   third-party imports in `src/`, `scripts/`, and `notebooks/` (textually - read
+   the code; never run pip/uv installs). Add imported-but-missing packages; flag
+   or remove declared-but-unused ones (packages invoked via subprocess, like the
+   `graphrag` CLI, or configured backends like `lancedb` in settings.yaml count
+   as used). Declare deps only for code that runs today - never for (target)
+   modules that do not import anything yet.
+4. **Commands** - verify every documented command exists and is correct (scripts,
    Makefiles, package.json scripts, CLI entrypoints). Add missing commonly-used
    commands.
-4. **Directory structure** - verify all documented paths exist; document significant
+5. **Directory structure** - verify all documented paths exist; document significant
    directories or files not mentioned; note naming conventions.
-5. **Configuration and environment variables** - document required variable NAMES
+6. **Configuration and environment variables** - document required variable NAMES
    (never values), config files, and their purposes.
-6. **Scripts and automation** - analyze the scripts directory and all GitHub Actions
+7. **Scripts and automation** - analyze the scripts directory and all GitHub Actions
    workflows; document what each does.
-7. **Conventions and gotchas** - extract coding conventions from the code; keep any
+8. **Conventions and gotchas** - extract coding conventions from the code; keep any
    documented gotchas that still apply and remove ones that no longer do.
-8. **README.md** - verify it the same way as CLAUDE.md: the YAML front-matter
+9. **README.md** - verify it the same way as CLAUDE.md: the YAML front-matter
    (languages, products, urlFragment), the Key features list (module names and
    the output artifacts they produce), the ASCII architecture diagram, every
    command in the Run section, and the paths in the Outputs / Verifying-the-run

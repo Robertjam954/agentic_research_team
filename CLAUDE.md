@@ -251,12 +251,17 @@ This repository is self-documenting. Two mechanisms keep the docs honest:
    code, commands, dependencies, structure, or conventions, update CLAUDE.md and
    README.md (and the affected prep docs: PRODUCT.md, ARCHITECTURE.md,
    CONTRIBUTING.md, AGENTS.md) so they match reality - including the
-   current-vs-**(target)** labeling in sections 1-9. Reality wins over stale
-   documentation. This applies to human and agent sessions alike.
+   current-vs-**(target)** labeling in sections 1-9. This includes
+   `requirements.txt`: it must declare the third-party imports of code that runs
+   today (src/, scripts/, the notebook) - never deps for (target) modules that
+   do not import anything yet. Reality wins over stale documentation. This
+   applies to human and agent sessions alike.
 2. **Every Monday:** the `.github/workflows/update-claude-md.yml` workflow runs an
    automated verification pass (09:00 UTC) driven by
    `.github/workflows/claude-md-review-prompt.md`. It re-analyzes the codebase,
-   corrects any drift in CLAUDE.md and README.md that session updates missed,
+   corrects any drift in CLAUDE.md, README.md, and requirements.txt that session
+   updates missed (dependency verification is textual - imports vs declarations,
+   never installs),
    regenerates the prioritized `TODO.md` at the repo root (seeded from
    `docs/gaps.md` and
    `docs/plans/merge-content-and-deploy-plan.md`), and opens a PR for review. It
