@@ -68,6 +68,7 @@ agentic_research_team/
       state.py                    (target) ResearchState + ProgressLedger
       graph.py                    (target) LangGraph StateGraph (Magentic loop)
       tools.py                    (target) typed tool registry
+    publish/notion_uploader.py    push notes/reports to the blog-review Notion DB
     utils/
   prompts/    docs/    eval/    experiments/    reports/    search/
   notebooks/biomedical_research_agents.ipynb
@@ -219,6 +220,7 @@ python -c "import asyncio; from src.agents.biomedical_agents import run_research
 | `AZURE_REDIS_HOST` `AZURE_REDIS_PORT` | cache + working memory (AAD auth) | target |
 | `AZURE_DATABRICKS_HOST` `AZURE_DATABRICKS_TOKEN` | dataset ETL + batch embeddings | target |
 | `AZURE_OPENAI_ENDPOINT` `AZURE_OPENAI_EMB_DEPLOYMENT` | models + embeddings | target |
+| `NOTION_API_KEY` `NOTION_DATABASE_ID` | blog-review Notion DB for `src/publish/notion_uploader.py` (Status = "Needs Review"; consumed by the blog-writer repo) | current |
 | `MCP_SERVER_URL` | Microsoft Learn MCP (`https://learn.microsoft.com/api/mcp`) | target |
 | `LANGSMITH_API_KEY` `LANGSMITH_PROJECT` `APPLICATIONINSIGHTS_CONNECTION_STRING` | tracing | target |
 
