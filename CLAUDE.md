@@ -68,6 +68,9 @@ agentic_research_team/
       state.py                    (target) ResearchState + ProgressLedger
       graph.py                    (target) LangGraph StateGraph (Magentic loop)
       tools.py                    (target) typed tool registry
+    store/
+      blob.py                     Azure Blob Storage helper
+      docdb.py                    Cosmos DB for MongoDB (vCore) helper
     utils/
   prompts/    docs/    eval/    experiments/    reports/    search/
   notebooks/biomedical_research_agents.ipynb
@@ -237,3 +240,33 @@ python -c "import asyncio; from src.agents.biomedical_agents import run_research
   ranking across; check each repo's CLAUDE.md.
 - **Default Claude pipeline model:** `claude-sonnet-4-20250514` (user memory).
 - **No em dashes** - single hyphen `-` only.
+
+---
+
+## 11. Self-documentation protocol
+
+This repository is self-documenting. Two mechanisms keep the docs honest:
+
+1. **End of every session:** before finishing any working session that changed
+   code, commands, dependencies, structure, or conventions, update CLAUDE.md and
+   README.md (and the affected prep docs: PRODUCT.md, ARCHITECTURE.md,
+   CONTRIBUTING.md, AGENTS.md) so they match reality - including the
+   current-vs-**(target)** labeling in sections 1-9. This includes
+   `requirements.txt`: it must declare the third-party imports of code that runs
+   today (src/, scripts/, the notebook) - never deps for (target) modules that
+   do not import anything yet. Reality wins over stale documentation. This
+   applies to human and agent sessions alike.
+2. **Every Monday:** the `.github/workflows/update-claude-md.yml` workflow runs an
+   automated verification pass (09:00 UTC) driven by
+   `.github/workflows/claude-md-review-prompt.md`. It re-analyzes the codebase,
+   corrects any drift in CLAUDE.md, README.md, and requirements.txt that session
+   updates missed (dependency verification is textual - imports vs declarations,
+   never installs),
+   regenerates the prioritized `TODO.md` at the repo root (seeded from
+   `docs/gaps.md` and
+   `docs/plans/merge-content-and-deploy-plan.md`), and opens a PR for review. It
+   requires the `CLAUDE_CODE_OAUTH_TOKEN` repository secret (generate with
+   `claude setup-token`). The run never commits anything under `data/`.
+
+`TODO.md` is machine-refreshed weekly: treat it as the current backlog, edit it
+freely during the week, and expect the Monday run to re-prioritize it.
