@@ -1,0 +1,30 @@
+{
+  "directoryMap": {
+    "reports": "publication-figures",
+    "src/exploratory data analysis": "data-analysis-hygiene",
+    "src/data collection and processing": "data-analysis-hygiene",
+    "data": "data-analysis-hygiene"
+  },
+  "skills": {
+    "publication-figures": {
+      "description": "Publication-quality figure standard (vector PDF + 600 DPI PNG, Arial, Okabe-Ito, grayscale-safe, error bars + n + significance).",
+      "priority": 8,
+      "triggers": {
+        "keywords": ["figure", "plot", "chart", "panel", "axis", "legend", "dpi", "colormap", "palette", "seaborn", "matplotlib"],
+        "keywordPatterns": ["\\b(?:fig(?:ure)?|plot|chart|panel)s?\\b"],
+        "pathPatterns": ["reports/**", "**/*plots*.py", "**/*figures*.py"],
+        "intentPatterns": ["(?:make|create|export|generate|save|revise|fix).*(?:figure|plot|chart|panel)"]
+      }
+    },
+    "data-analysis-hygiene": {
+      "description": "Data hygiene: missingness audit before EDA, skip existing outputs, step-by-step merge diagnostics, PHI safety.",
+      "priority": 9,
+      "triggers": {
+        "keywords": ["dataset", "merge", "join", "eda", "table 1", "missingness", "impute", "feature", "cohort", "phi", "patient"],
+        "keywordPatterns": ["\\b(?:merg|join)(?:e|ing|ed)?\\b", "\\bmissing(?:ness)?\\b"],
+        "pathPatterns": ["data/**", "**/*.csv", "**/*eda*.py", "**/exploratory*/**"],
+        "intentPatterns": ["(?:load|merge|join|clean|audit|analyze).*(?:data|dataset|table|cohort)", "(?:run|do|start).*(?:eda|analysis|table 1)"]
+      }
+    }
+  }
+}
